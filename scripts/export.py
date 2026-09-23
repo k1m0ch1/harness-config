@@ -78,6 +78,31 @@ def sanitize_claude_settings():
     print(f"claude/settings.json -> sanitized ({len(secrets)} secret paths extracted)")
 
 
+def sanitize_claude_json_mcpservers():
+    """~/.claude.json's top-level mcpServers is Claude Code's actual live MCP
+    registry (settings.json's mcpServers key is a separate/legacy list) —
+    export it too so install.sh can restore it."""
+    src = HOME / ".claude.json"
+    if not src.exists():
+        print("  MISSING (skipped): ~/.claude.json")
+        return
+    d = json.loads(src.read_text(encoding="utf-8"))
+    mcp = json.loads(json.dumps(d.get("mcpServers", {})))  # deep copy
+    secrets = {}
+    for name, cfg in mcp.items():
+        if isinstance(cfg.get("env"), dict):
+            sanitize_env_block(cfg["env"], f"mcpServers.{name}.env", secrets)
+        if isinstance(cfg.get("headers"), dict):
+            sanitize_env_block(cfg["headers"], f"mcpServers.{name}.headers", secrets)
+    dest = PUB / "claude" / "mcpServers.json"
+    dest.parent.mkdir(parents=True, exist_ok=True)
+    dest.write_text(json.dumps(mcp, indent=2) + "\n", encoding="utf-8")
+    sec_dest = SEC / "claude" / "mcpServers-secrets.json"
+    sec_dest.parent.mkdir(parents=True, exist_ok=True)
+    sec_dest.write_text(json.dumps(secrets, indent=2) + "\n", encoding="utf-8")
+    print(f"claude.json mcpServers -> sanitized ({len(secrets)} secret paths extracted)")
+
+
 def sanitize_ccs_settings_files():
     names = [
         "glm.settings.json", "glm-imam.settings.json", "glm-k1m0ch1.settings.json",
@@ -224,6 +249,7 @@ def copy_secrets_verbatim():
 
 if __name__ == "__main__":
     sanitize_claude_settings()
+    sanitize_claude_json_mcpservers()
     sanitize_settings_local()
     sanitize_ccs_settings_files()
     sanitize_ccs_config_yaml()
