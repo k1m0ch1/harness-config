@@ -1,11 +1,11 @@
 #!/usr/bin/env bash
-# Scan mcpServers from ~/.claude/settings.json and ~/.claude.json (the live
-# MCP registry Claude Code actually reads) and report whether each server's
-# launcher command is installed. Run standalone or via install.sh.
+# Scan mcpServers, enabled plugins, and standalone tool deps (rtk) and report
+# what's missing on this device. Run standalone or via install.sh.
 set -euo pipefail
 
 SETTINGS="${1:-$HOME/.claude/settings.json}"
 CLAUDE_JSON="${2:-$HOME/.claude.json}"
+PLUGINS_DIR="${3:-$HOME/.claude/plugins}"
 command -v jq >/dev/null 2>&1 || { echo "missing required tool: jq" >&2; exit 1; }
 
 hint() {
@@ -36,8 +36,35 @@ done < <(
     done
 )
 
+echo
+echo "--- plugins ---"
+if [ -f "$SETTINGS" ]; then
+    while IFS=$'\t' read -r plugin_id; do
+        plugin_id="${plugin_id%$'\r'}"
+        marketplace="${plugin_id#*@}"
+        cache_root="$PLUGINS_DIR/cache"
+        if [ -n "$(find "$cache_root" -maxdepth 3 -ipath "*${marketplace}*" 2>/dev/null | head -n1)" ]; then
+            echo "OK      $plugin_id (cached)"
+        else
+            echo "MISSING $plugin_id  (not cached yet: run 'claude plugin install $plugin_id' or let Claude Code fetch it on next start)"
+            missing=$((missing + 1))
+        fi
+    done < <(jq -r '.enabledPlugins // {} | to_entries[] | select(.value == true) | .key' "$SETTINGS")
+fi
+
+echo
+echo "--- other tools ---"
+if command -v rtk >/dev/null 2>&1; then
+    echo "OK      rtk -> $(command -v rtk)"
+else
+    echo "MISSING rtk  (install: https://github.com/rtk-ai/rtk)"
+    missing=$((missing + 1))
+fi
+
 if [ "$missing" -gt 0 ]; then
-    echo "$missing MCP server(s) missing their launcher command." >&2
+    echo
+    echo "$missing item(s) missing." >&2
     exit 1
 fi
-echo "all MCP server commands available."
+echo
+echo "all MCP servers, plugins, and tools available."

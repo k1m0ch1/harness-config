@@ -43,6 +43,8 @@ Real value lives in `harness-config-secrets/ccs/config-secrets.json`.
 - `ccs/.session-secret`
 - `ccs/cliproxy/config.yaml`, `accounts.json`, `sessions.json`, `auth/*.json`
 - `ccs/proxy/*.session.json`
+- `ssh/` — whole `~/.ssh` directory (private keys, `config*`, `known_hosts*`).
+  Restored with `chmod 600` on keys / `644` on `*.pub` / `700` on the dir.
 
 ## Regenerating this manifest
 Run `scripts/export.py` on the source machine — it re-derives both trees

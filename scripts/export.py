@@ -244,6 +244,15 @@ def copy_secrets_verbatim():
         proxy_dest.mkdir(parents=True, exist_ok=True)
         for f in proxy_src.glob("*.session.json"):
             shutil.copy2(f, proxy_dest / f.name)
+
+    # ~/.ssh is entirely private keys/configs/known_hosts -- whole dir is secret
+    ssh_src = HOME / ".ssh"
+    if ssh_src.exists():
+        ssh_dest = SEC / "ssh"
+        if ssh_dest.exists():
+            shutil.rmtree(ssh_dest)
+        shutil.copytree(ssh_src, ssh_dest)
+
     print("secret verbatim files/dirs copied")
 
 

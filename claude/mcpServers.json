@@ -59,5 +59,13 @@
       "C:\\Users\\k1m0c\\.ccs\\mcp\\ccs-image-analysis-server.cjs"
     ],
     "env": {}
+  },
+  "sequential-thinking": {
+    "command": "npx",
+    "args": [
+      "-y",
+      "@modelcontextprotocol/server-sequential-thinking"
+    ],
+    "env": {}
   }
 }

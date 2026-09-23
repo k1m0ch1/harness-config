@@ -28,6 +28,7 @@ backup() {
 
 backup "$HOME/.claude"
 backup "$HOME/.ccs"
+backup "$HOME/.ssh"
 
 mkdir -p "$HOME/.claude" "$HOME/.ccs"
 cp -a "$SCRIPT_DIR/claude/." "$HOME/.claude/"
@@ -45,6 +46,16 @@ for f in "$TMP_SECRETS"/ccs/*.settings.json; do
 done
 [ -d "$TMP_SECRETS/ccs/cliproxy" ] && cp -a "$TMP_SECRETS/ccs/cliproxy" "$HOME/.ccs/"
 [ -d "$TMP_SECRETS/ccs/proxy" ] && mkdir -p "$HOME/.ccs/proxy" && cp -a "$TMP_SECRETS/ccs/proxy/." "$HOME/.ccs/proxy/"
+
+# ~/.ssh: entirely private keys/configs, restored whole from the secrets repo
+if [ -d "$TMP_SECRETS/ssh" ]; then
+    mkdir -p "$HOME/.ssh"
+    cp -a "$TMP_SECRETS/ssh/." "$HOME/.ssh/"
+    find "$HOME/.ssh" -type f ! -name "*.pub" ! -name "known_hosts*" ! -name "config*" -exec chmod 600 {} +
+    find "$HOME/.ssh" -type f -name "*.pub" -exec chmod 644 {} +
+    chmod 700 "$HOME/.ssh"
+    echo "restored ~/.ssh"
+fi
 
 # splice real mcpServers.*.env / .headers secrets back into settings.json
 SECRETS_JSON="$TMP_SECRETS/claude/claude-settings-secrets.json"
