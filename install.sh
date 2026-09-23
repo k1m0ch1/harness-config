@@ -9,7 +9,7 @@ SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 SECRETS_REPO="k1m0ch1/harness-config-secrets"
 TS="$(date +%Y%m%d%H%M%S)"
 
-for bin in git gh jq; do
+for bin in git gh jq curl; do
     command -v "$bin" >/dev/null 2>&1 || { echo "missing required tool: $bin" >&2; exit 1; }
 done
 
@@ -120,6 +120,26 @@ fi
 
 find "$HOME/.claude/.credentials.json" "$HOME/.ccs/.session-secret" "$HOME/.ccs/cliproxy" "$HOME/.ccs/proxy" \
     -type f -exec chmod 600 {} + 2>/dev/null || true
+
+# rtk is a standalone Rust CLI, not an MCP server, so it is not in mcpServers
+# and nothing above installs it: it compresses bash output before the agent
+# reads it. Delegate to upstream's installer rather than reimplementing the
+# download -- it resolves the release, verifies the archive's SHA-256 against
+# checksums.txt and refuses to install an unverified binary. Set RTK_VERSION to
+# pin (e.g. RTK_VERSION=v0.49.0); unset installs the latest release.
+if command -v rtk >/dev/null 2>&1; then
+    echo "rtk already installed -> $(command -v rtk)"
+else
+    echo "installing rtk..."
+    if ! curl -fsSL https://raw.githubusercontent.com/rtk-ai/rtk/refs/heads/master/install.sh \
+        | RTK_VERSION="${RTK_VERSION:-}" sh; then
+        echo "warning: rtk install failed -- install it manually: https://github.com/rtk-ai/rtk" >&2
+    fi
+    if ! command -v rtk >/dev/null 2>&1 && [ -x "$HOME/.local/bin/rtk" ]; then
+        echo "note: rtk is at ~/.local/bin but not on PATH. Add to your shell profile:" >&2
+        echo "      export PATH=\"\$HOME/.local/bin:\$PATH\"" >&2
+    fi
+fi
 
 echo "done. Backups (if any) are at ~/.claude.bak.$TS and ~/.ccs.bak.$TS"
 
