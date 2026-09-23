@@ -1,0 +1,63 @@
+{
+  "browsermcp": {
+    "type": "stdio",
+    "command": "npx",
+    "args": [
+      "@browsermcp/mcp@latest"
+    ],
+    "env": {}
+  },
+  "playwright-extension": {
+    "command": "npx",
+    "args": [
+      "@playwright/mcp@latest",
+      "--extension"
+    ],
+    "env": {
+      "PLAYWRIGHT_MCP_EXTENSION_TOKEN": "${SECRET:PLAYWRIGHT_MCP_EXTENSION_TOKEN}"
+    }
+  },
+  "gitnexus": {
+    "type": "sse",
+    "url": "https://gitnexus.chronicle.rip/sse",
+    "headers": {
+      "X-Api-Key": "${SECRET:X-Api-Key}"
+    }
+  },
+  "mem0": {
+    "command": "cmd",
+    "args": [
+      "/c",
+      "python",
+      "-m",
+      "mem0_mcp_server"
+    ],
+    "env": {
+      "MEM0_API_URL": "http://194.233.71.12:8001",
+      "MEM0_USERNAME": "k1m0ch1",
+      "MEM0_PASSWORD": "${SECRET:MEM0_PASSWORD}"
+    }
+  },
+  "shodan": {
+    "command": "mcp-shodan",
+    "env": {
+      "SHODAN_API_KEY": "${SECRET:SHODAN_API_KEY}"
+    }
+  },
+  "ccs-websearch": {
+    "type": "stdio",
+    "command": "node",
+    "args": [
+      "C:\\Users\\k1m0c\\.ccs\\mcp\\ccs-websearch-server.cjs"
+    ],
+    "env": {}
+  },
+  "ccs-image-analysis": {
+    "type": "stdio",
+    "command": "node",
+    "args": [
+      "C:\\Users\\k1m0c\\.ccs\\mcp\\ccs-image-analysis-server.cjs"
+    ],
+    "env": {}
+  }
+}

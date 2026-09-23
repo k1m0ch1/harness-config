@@ -1,10 +1,11 @@
 #!/usr/bin/env bash
-# Scan ~/.claude/settings.json's mcpServers and report whether each server's
+# Scan mcpServers from ~/.claude/settings.json and ~/.claude.json (the live
+# MCP registry Claude Code actually reads) and report whether each server's
 # launcher command is installed. Run standalone or via install.sh.
 set -euo pipefail
 
 SETTINGS="${1:-$HOME/.claude/settings.json}"
-[ -f "$SETTINGS" ] || { echo "not found: $SETTINGS" >&2; exit 1; }
+CLAUDE_JSON="${2:-$HOME/.claude.json}"
 command -v jq >/dev/null 2>&1 || { echo "missing required tool: jq" >&2; exit 1; }
 
 hint() {
@@ -17,8 +18,11 @@ hint() {
 }
 
 missing=0
+seen=""
 while IFS=$'\t' read -r name cmd; do
     cmd="${cmd%$'\r'}"
+    case " $seen " in *" $name "*) continue ;; esac
+    seen="$seen $name"
     [ -z "$cmd" ] || [ "$cmd" = "null" ] && continue
     if command -v "$cmd" >/dev/null 2>&1; then
         echo "OK      $name -> $cmd"
@@ -26,7 +30,11 @@ while IFS=$'\t' read -r name cmd; do
         echo "MISSING $name -> $cmd  ($(hint "$cmd"))"
         missing=$((missing + 1))
     fi
-done < <(jq -r '.mcpServers // {} | to_entries[] | [.key, (.value.command // "")] | @tsv' "$SETTINGS")
+done < <(
+    for f in "$CLAUDE_JSON" "$SETTINGS"; do
+        [ -f "$f" ] && jq -r '.mcpServers // {} | to_entries[] | [.key, (.value.command // "")] | @tsv' "$f"
+    done
+)
 
 if [ "$missing" -gt 0 ]; then
     echo "$missing MCP server(s) missing their launcher command." >&2

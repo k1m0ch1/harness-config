@@ -73,6 +73,35 @@ if [ -f "$CONFIG_SECRETS_JSON" ] && [ -f "$HOME/.ccs/config.yaml" ]; then
     echo "spliced secrets into ~/.ccs/config.yaml"
 fi
 
+# ~/.claude.json's top-level mcpServers is Claude Code's live MCP registry
+# (separate from ~/.claude/settings.json's mcpServers) — merge it in so
+# installed MCP servers show up without restarting/re-adding manually.
+MCP_TEMPLATE="$HOME/.claude/mcpServers.json"
+rm -f "$MCP_TEMPLATE"  # stray copy from the claude/ tree cp above; real target is ~/.claude.json
+MCP_TEMPLATE="$SCRIPT_DIR/claude/mcpServers.json"
+if [ -f "$MCP_TEMPLATE" ]; then
+    CLAUDE_JSON="$HOME/.claude.json"
+    [ -f "$CLAUDE_JSON" ] || echo '{}' > "$CLAUDE_JSON"
+    tmp_json="$(mktemp)"
+    jq --slurpfile new "$MCP_TEMPLATE" '.mcpServers = ((.mcpServers // {}) * $new[0])' "$CLAUDE_JSON" > "$tmp_json"
+    mv "$tmp_json" "$CLAUDE_JSON"
+
+    MCP_SECRETS_JSON="$TMP_SECRETS/claude/mcpServers-secrets.json"
+    if [ -f "$MCP_SECRETS_JSON" ]; then
+        tmp_json="$(mktemp)"
+        jq --slurpfile secrets "$MCP_SECRETS_JSON" '
+          . as $orig
+          | reduce ($secrets[0] | to_entries[]) as $e
+              ($orig;
+                reduce ($e.value | to_entries[]) as $kv
+                  (.; setpath(($e.key / ".") + [$kv.key]; $kv.value))
+              )
+        ' "$CLAUDE_JSON" > "$tmp_json"
+        mv "$tmp_json" "$CLAUDE_JSON"
+    fi
+    echo "merged mcpServers into ~/.claude.json"
+fi
+
 find "$HOME/.claude/.credentials.json" "$HOME/.ccs/.session-secret" "$HOME/.ccs/cliproxy" "$HOME/.ccs/proxy" \
     -type f -exec chmod 600 {} + 2>/dev/null || true
 

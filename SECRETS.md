@@ -22,6 +22,17 @@ Real values live in `harness-config-secrets/claude/claude-settings-secrets.json`
 Real, unsanitized copies of every `*.settings.json` file live whole in
 `harness-config-secrets/ccs/`.
 
+## `claude/mcpServers.json` (exported from `~/.claude.json`, not `settings.json`)
+- `mcpServers.playwright-extension.env.PLAYWRIGHT_MCP_EXTENSION_TOKEN`
+- `mcpServers.gitnexus.headers.X-Api-Key`
+- `mcpServers.mem0.env.MEM0_PASSWORD`
+- `mcpServers.shodan.env.SHODAN_API_KEY`
+
+Real values live in `harness-config-secrets/claude/mcpServers-secrets.json`.
+`~/.claude.json`'s top-level `mcpServers` is Claude Code's live MCP registry
+(separate from `~/.claude/settings.json`'s `mcpServers` key) — `install.sh`
+merges this template into it so servers are available immediately.
+
 ## `ccs/config.yaml`
 - `TAVILY_API_KEY`
 
