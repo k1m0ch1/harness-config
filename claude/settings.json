@@ -208,7 +208,7 @@
       "command": "uvx",
       "args": [
         "--from",
-        "C:\\Users\\k1m0c\\mem0-mcp-server",
+        "git+https://github.com/k1m0ch1/mem0-mcp-server.git",
         "mem0-mcp-server"
       ],
       "env": {
