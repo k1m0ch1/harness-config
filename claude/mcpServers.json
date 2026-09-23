@@ -25,12 +25,11 @@
     }
   },
   "mem0": {
-    "command": "cmd",
+    "command": "uvx",
     "args": [
-      "/c",
-      "python",
-      "-m",
-      "mem0_mcp_server"
+      "--from",
+      "git+https://github.com/k1m0ch1/mem0-mcp-server",
+      "mem0-mcp-server"
     ],
     "env": {
       "MEM0_API_URL": "http://194.233.71.12:8001",
