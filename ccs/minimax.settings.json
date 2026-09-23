@@ -1,0 +1,11 @@
+{
+  "env": {
+    "ANTHROPIC_BASE_URL": "https://api.minimax.io/anthropic",
+    "ANTHROPIC_AUTH_TOKEN": "${SECRET:minimax:ANTHROPIC_AUTH_TOKEN}",
+    "ANTHROPIC_MODEL": "MiniMax-M2.1",
+    "ANTHROPIC_DEFAULT_OPUS_MODEL": "MiniMax-M2.1",
+    "ANTHROPIC_DEFAULT_SONNET_MODEL": "MiniMax-M2.1",
+    "ANTHROPIC_DEFAULT_HAIKU_MODEL": "MiniMax-M2.1",
+    "CCS_DROID_PROVIDER": "anthropic"
+  }
+}

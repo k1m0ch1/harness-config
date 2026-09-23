@@ -1,0 +1,44 @@
+{
+  "version": 2,
+  "plugins": {
+    "custom-statusline@FlineDev": [
+      {
+        "scope": "project",
+        "projectPath": "C:\\Users\\k1m0c",
+        "installPath": "C:\\Users\\k1m0c\\.claude\\plugins\\cache\\FlineDev\\custom-statusline\\1.0.1",
+        "version": "1.0.1",
+        "installedAt": "2026-03-05T04:23:48.779Z",
+        "lastUpdated": "2026-03-05T04:23:48.779Z",
+        "gitCommitSha": "bd1906b0ff7afe211e22446b30e1a988b2459a1e"
+      },
+      {
+        "scope": "user",
+        "installPath": "C:\\Users\\k1m0c\\.claude\\plugins\\cache\\FlineDev\\custom-statusline\\1.0.1",
+        "version": "1.0.1",
+        "installedAt": "2026-08-07T08:37:00.961Z",
+        "lastUpdated": "2026-08-07T08:37:00.961Z",
+        "gitCommitSha": "bd1906b0ff7afe211e22446b30e1a988b2459a1e"
+      }
+    ],
+    "ponytail@ponytail": [
+      {
+        "scope": "user",
+        "installPath": "C:\\Users\\k1m0c\\.claude\\plugins\\cache\\ponytail\\ponytail\\4.7.0",
+        "version": "4.7.0",
+        "installedAt": "2026-06-23T09:12:52.470Z",
+        "lastUpdated": "2026-06-23T09:12:52.470Z",
+        "gitCommitSha": "dedc97ca7c8a1e7463ac5b36f7fe4b28c3c435a2"
+      }
+    ],
+    "diagram-design@diagram-design": [
+      {
+        "scope": "user",
+        "installPath": "C:\\Users\\k1m0c\\.claude\\plugins\\cache\\diagram-design\\diagram-design\\2.3.2",
+        "version": "2.3.2",
+        "installedAt": "2026-08-13T05:28:56.895Z",
+        "lastUpdated": "2026-08-13T05:28:56.895Z",
+        "gitCommitSha": "f3622cf66a3c557cb2ead57b687a3c1ff63f5a2b"
+      }
+    ]
+  }
+}

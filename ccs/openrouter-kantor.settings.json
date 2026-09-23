@@ -1,0 +1,25 @@
+{
+  "env": {
+    "ANTHROPIC_BASE_URL": "https://openrouter.ai/api",
+    "ANTHROPIC_AUTH_TOKEN": "${SECRET:openrouter-kantor:ANTHROPIC_AUTH_TOKEN}",
+    "ANTHROPIC_MODEL": "anthropic/claude-opus-4.5",
+    "ANTHROPIC_DEFAULT_OPUS_MODEL": "anthropic/claude-opus-4.5",
+    "ANTHROPIC_DEFAULT_SONNET_MODEL": "anthropic/claude-opus-4.5",
+    "ANTHROPIC_DEFAULT_HAIKU_MODEL": "anthropic/claude-opus-4.5",
+    "ANTHROPIC_API_KEY": "${SECRET:openrouter-kantor:ANTHROPIC_API_KEY}"
+  },
+  "hooks": {
+    "PreToolUse": [
+      {
+        "matcher": "WebSearch",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node \"C:\\Users\\k1m0c\\.ccs\\hooks\\websearch-transformer.cjs\"",
+            "timeout": 85
+          }
+        ]
+      }
+    ]
+  }
+}

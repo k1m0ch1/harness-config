@@ -1,0 +1,24 @@
+{
+  "hooks": {
+    "PreToolUse": [
+      {
+        "matcher": "WebSearch",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node \"C:\\Users\\k1m0c\\.ccs\\hooks\\websearch-transformer.cjs\"",
+            "timeout": 85
+          }
+        ]
+      }
+    ]
+  },
+  "env": {
+    "ANTHROPIC_MODEL": "gpt-5.3-codex",
+    "ANTHROPIC_DEFAULT_OPUS_MODEL": "gpt-5.3-codex",
+    "ANTHROPIC_DEFAULT_SONNET_MODEL": "gpt-5.2",
+    "ANTHROPIC_DEFAULT_HAIKU_MODEL": "gpt-5.4-mini",
+    "ANTHROPIC_BASE_URL": "http://127.0.0.1:8317/api/provider/codex",
+    "ANTHROPIC_AUTH_TOKEN": "${SECRET:codex:ANTHROPIC_AUTH_TOKEN}"
+  }
+}

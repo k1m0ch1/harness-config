@@ -1,0 +1,350 @@
+# CCS Unified Configuration
+# Docs: https://github.com/kaitranntt/ccs
+version: 14
+setup_completed: true
+
+# ----------------------------------------------------------------------------
+# Accounts: Isolated Claude instances (each with separate auth/sessions)
+# Manage with: ccs auth add <name>, ccs auth list, ccs auth remove <name>
+# ----------------------------------------------------------------------------
+accounts:
+  kantor:
+    created: "2026-02-24T15:07:38.234Z"
+    last_used: "2026-03-05T04:11:59.220Z"
+
+# ----------------------------------------------------------------------------
+# Profiles: API-based providers (GLM, Kimi, custom endpoints)
+# Each profile points to a *.settings.json file containing env vars.
+# Edit the settings file directly to customize (ANTHROPIC_MAX_TOKENS, etc.)
+# ----------------------------------------------------------------------------
+profiles:
+  glm:
+    type: api
+    settings: ~/.ccs/glm.settings.json
+  glm-imam:
+    type: api
+    settings: ~/.ccs/glm-imam.settings.json
+  openrouter-kantor:
+    type: api
+    settings: ~/.ccs/openrouter-kantor.settings.json
+  glm-k1m0ch1:
+    type: api
+    settings: ~/.ccs/glm-k1m0ch1.settings.json
+  minimax:
+    type: api
+    settings: ~/.ccs/minimax.settings.json
+  deepseek:
+    type: api
+    settings: ~/.ccs/deepseek.settings.json
+
+# ----------------------------------------------------------------------------
+# CLIProxy: OAuth-based providers (gemini, codex, xai/grok, agy, qwen, iflow)
+# Each variant can reference a *.settings.json file for custom env vars.
+# Edit the settings file directly to customize model or other settings.
+# Optional: cliproxy.management_panel_repository overrides the generated CPAMC repo.
+# ----------------------------------------------------------------------------
+cliproxy:
+  oauth_accounts: {}
+  providers:
+    - gemini
+    - codex
+    - xai
+    - agy
+    - qwen
+    - iflow
+    - kiro
+    - ghcp
+    - claude
+    - kimi
+    - cursor
+    - gitlab
+    - codebuddy
+    - kilo
+    - qoder
+  variants: {}
+  logging:
+    enabled: false
+    request_log: false
+  backend: plus
+  auto_sync: true
+  safety:
+    antigravity_ack_bypass: false
+  routing:
+    strategy: fill-first
+    session_affinity: false
+    session_affinity_ttl: 1h
+
+# ----------------------------------------------------------------------------
+# Proxy Routing: OpenAI-compatible local proxy model selection rules
+# Use profile:model selectors to force a target profile and upstream model.
+# ----------------------------------------------------------------------------
+proxy:
+  profile_ports: {}
+  routing:
+    longContextThreshold: 60000
+
+# ----------------------------------------------------------------------------
+# Logging: CCS-owned structured runtime logs
+# Current file: ~/.ccs/logs/current.jsonl
+# Archives rotate automatically and are pruned by retain_days.
+# This is separate from cliproxy.logging, which controls CLIProxy runtime files.
+# ----------------------------------------------------------------------------
+logging:
+  enabled: true
+  level: info
+  rotate_mb: 10
+  retain_days: 7
+  redact: true
+  live_buffer_size: 250
+
+# ----------------------------------------------------------------------------
+# CLIProxy Server: Remote proxy connection settings
+# Configure via Dashboard (`ccs config`) > Proxy tab.
+#
+# remote: Connect to a remote CLIProxyAPI instance
+# fallback: Use local proxy if remote is unreachable
+# local: Local proxy settings (port, auto-start)
+# ----------------------------------------------------------------------------
+cliproxy_server:
+  remote:
+    enabled: false
+    host: ""
+    protocol: http
+    auth_token: ""
+  fallback:
+    enabled: true
+    auto_start: false
+  local:
+    port: 8317
+    auto_start: true
+
+# ----------------------------------------------------------------------------
+# Preferences: User settings
+# ----------------------------------------------------------------------------
+preferences:
+  theme: system
+  telemetry: false
+  auto_update: true
+
+# ----------------------------------------------------------------------------
+# WebSearch: real search backends for third-party profiles
+# Dashboard (`ccs config`) is the source of truth for provider selection.
+#
+# Third-party providers (gemini, codex, agy, etc.) do not have access to
+# Anthropic's WebSearch tool. CCS intercepts that tool and runs local search.
+#
+# Priority: Exa -> Tavily -> Brave -> DuckDuckGo -> optional legacy AI CLI fallbacks
+#
+# Exa requires EXA_API_KEY in your environment.
+# Tavily requires TAVILY_API_KEY in your environment.
+# Brave requires BRAVE_API_KEY in your environment.
+# DuckDuckGo works with zero extra setup and is enabled by default.
+#
+# Optional LLM CLI fallbacks:
+#   agy (recommended): curl -fsSL https://antigravity.google/cli/install.sh | bash
+#   gemini (deprecated, retired upstream 2026-06-18): use agy instead
+#   opencode: curl -fsSL https://opencode.ai/install | bash
+#   grok: npm i -g @vibe-kit/grok-cli
+# ----------------------------------------------------------------------------
+websearch:
+  enabled: true
+  providers:
+    exa:
+      enabled: false
+      max_results: 5
+    tavily:
+      enabled: true
+      max_results: 5
+    brave:
+      enabled: false
+      max_results: 5
+    searxng:
+      enabled: false
+      url: ""
+      max_results: 5
+    duckduckgo:
+      enabled: true
+      max_results: 5
+    agy:
+      enabled: false
+      model: gemini-2.5-flash
+      timeout: 90
+    gemini:
+      enabled: true
+      model: gemini-2.5-flash
+      timeout: 55
+    opencode:
+      enabled: false
+      model: opencode/grok-code
+      timeout: 90
+    grok:
+      enabled: false
+      timeout: 55
+
+# ----------------------------------------------------------------------------
+# Copilot: Deprecated GitHub Copilot compatibility bridge (via copilot-api)
+# Existing local setups remain available, but prefer Codex or another active provider.
+# GitHub usage-based Copilot billing begins June 1, 2026.
+#
+# !! DISCLAIMER - USE AT YOUR OWN RISK !!
+# This uses an UNOFFICIAL reverse-engineered API.
+# Excessive usage may trigger GitHub account restrictions.
+# CCS provides NO WARRANTY and accepts NO RESPONSIBILITY for consequences.
+#
+# Setup: npx copilot-api auth (authenticate with GitHub)
+# Usage: ccs copilot (switch to copilot profile)
+#
+# Models: claude-sonnet-4.5, claude-opus-4.5, gpt-5.1, gemini-2.5-pro
+# Account types: individual, business, enterprise
+# ----------------------------------------------------------------------------
+copilot:
+  enabled: false
+  auto_start: false
+  port: 4141
+  account_type: individual
+  rate_limit: null
+  wait_on_limit: true
+  model: gpt-4.1
+
+# ----------------------------------------------------------------------------
+# Cursor: Cursor IDE proxy daemon
+# Enables Cursor IDE integration via local proxy daemon.
+#
+# enabled: Enable/disable Cursor integration (default: false)
+# port: Port for cursor proxy daemon (default: 20129)
+# auto_start: Auto-start daemon when CCS starts (default: false)
+# ghost_mode: Disable telemetry for privacy (default: true)
+# model: Default model ID (used for ANTHROPIC_MODEL)
+# opus_model/sonnet_model/haiku_model: Optional tier model mapping
+# ----------------------------------------------------------------------------
+cursor:
+  enabled: false
+  port: 20129
+  auto_start: false
+  ghost_mode: true
+  model: gpt-5.3-codex
+
+# ----------------------------------------------------------------------------
+# Global Environment Variables: Injected into all non-Claude subscription profiles
+# These env vars disable telemetry/reporting for third-party providers.
+# Configure via Dashboard (`ccs config`) > Global Env tab.
+#
+# Default variables:
+#   DISABLE_BUG_COMMAND: Disables /bug command (not supported by proxy)
+#   DISABLE_ERROR_REPORTING: Disables error reporting to Anthropic
+#   DISABLE_TELEMETRY: Disables usage telemetry
+# ----------------------------------------------------------------------------
+global_env:
+  enabled: true
+  env:
+    DISABLE_BUG_COMMAND: "1"
+    DISABLE_ERROR_REPORTING: "1"
+    DISABLE_TELEMETRY: "1"
+    TAVILY_API_KEY: "${SECRET:TAVILY_API_KEY}"
+
+# ----------------------------------------------------------------------------
+# Thinking: Extended thinking/reasoning budget configuration
+# Controls reasoning depth for supported providers (agy, gemini, codex).
+#
+# Modes: auto (use tier_defaults), off (disable), manual (--thinking/--effort flags)
+# Levels: minimal (512), low (1K), medium (8K), high (24K), xhigh (32K), max (adaptive ceiling), auto
+# Override: Set global override value (number or level name)
+# Provider overrides: Per-provider tier defaults
+# ----------------------------------------------------------------------------
+thinking:
+  mode: auto
+  tier_defaults:
+    opus: high
+    sonnet: medium
+    haiku: low
+  show_warnings: true
+
+# ----------------------------------------------------------------------------
+# Official Channels: Runtime auto-enable for Anthropic official channel plugins
+# Supported channels: telegram, discord, imessage
+# Runtime-only: CCS injects --channels at launch for compatible Claude sessions.
+# Bot tokens live in Claude channel env files, not in config.yaml.
+# Use selected: [telegram, discord, imessage] to choose channels.
+# unattended adds --dangerously-skip-permissions only when channel auto-enable is active.
+# Compatible sessions: native Claude default/account profiles only.
+# Configure via: ccs config channels or the Settings > Channels dashboard tab.
+# ----------------------------------------------------------------------------
+channels:
+  selected: []
+  unattended: false
+
+# ----------------------------------------------------------------------------
+# Browser Automation: Claude browser attach and Codex browser tooling
+# Claude attach reuses a running Chrome/Chromium session with remote debugging.
+# Codex tooling controls whether CCS injects Playwright MCP overrides.
+#
+# claude.user_data_dir should point at the Chrome user-data directory for the
+# dedicated attach session. claude.devtools_port is the expected debugging port.
+# Configure via: Settings > Browser or `ccs browser ...`.
+# ----------------------------------------------------------------------------
+browser:
+  claude:
+    enabled: false
+    policy: manual
+    user_data_dir: C:\Users\k1m0c\.ccs\browser\chrome-user-data
+    devtools_port: 9222
+    eval_mode: readonly
+  codex:
+    enabled: false
+    policy: manual
+    eval_mode: readonly
+
+# ----------------------------------------------------------------------------
+# Image Analysis: Vision-based analysis for images and PDFs
+# Routes Read tool requests for images/PDFs through CLIProxy vision API.
+#
+# When enabled: Image files trigger vision analysis instead of raw file read
+# Provider models: Vision model used for each CLIProxy provider
+# Timeout: Maximum seconds to wait for analysis (10-600)
+#
+# Supported formats: .jpg, .jpeg, .png, .gif, .webp, .heic, .bmp, .tiff, .pdf
+# Configure via: ccs config image-analysis
+# ----------------------------------------------------------------------------
+image_analysis:
+  enabled: true
+  timeout: 60
+  provider_models:
+    agy: gemini-2.5-flash
+    gemini: gemini-2.5-flash
+    codex: gpt-5.1-codex-mini
+    kiro: kiro-claude-haiku-4-5
+    ghcp: claude-haiku-4.5
+    claude: claude-haiku-4-5-20251001
+    qwen: vision-model
+    iflow: qwen3-vl-plus
+    kimi: vision-model
+  fallback_backend: gemini
+  profile_backends: {}
+
+# ----------------------------------------------------------------------------
+# Quota Management: Hybrid auto+manual account selection for multi-account setups
+# mode: auto | manual | hybrid (default: hybrid)
+# manual.tier_lock: per-provider tier lock map (e.g. { agy: "ultra" })
+# Configure via: POST /api/accounts/tier-lock
+# ----------------------------------------------------------------------------
+quota_management:
+  mode: hybrid
+  auto:
+    preflight_check: true
+    exhaustion_threshold: 5
+    tier_priority:
+      - ultra
+      - pro
+      - free
+    cooldown_minutes: 5
+  manual:
+    paused_accounts: []
+    forced_default: null
+    tier_lock: null
+  runtime_monitor:
+    enabled: true
+    normal_interval_seconds: 300
+    critical_interval_seconds: 60
+    warn_threshold: 20
+    exhaustion_threshold: 5
+    cooldown_minutes: 5

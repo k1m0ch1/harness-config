@@ -1,0 +1,222 @@
+{
+  "env": {
+    "ANTHROPIC_DEFAULT_FABLE_MODEL": "cc/claude-fable-5"
+  },
+  "permissions": {
+    "defaultMode": "bypassPermissions"
+  },
+  "model": "sonnet",
+  "hooks": {
+    "SessionStart": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "C:/Users/k1m0c/.orca/agent-hooks/claude-hook.cmd || echo {}",
+            "timeout": 10
+          }
+        ]
+      }
+    ],
+    "UserPromptSubmit": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "C:/Users/k1m0c/.orca/agent-hooks/claude-hook.cmd || echo {}",
+            "timeout": 10
+          }
+        ]
+      }
+    ],
+    "Stop": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "C:/Users/k1m0c/.orca/agent-hooks/claude-hook.cmd || echo {}",
+            "timeout": 10
+          }
+        ]
+      }
+    ],
+    "StopFailure": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "C:/Users/k1m0c/.orca/agent-hooks/claude-hook.cmd || echo {}",
+            "timeout": 10
+          }
+        ]
+      }
+    ],
+    "SubagentStart": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "C:/Users/k1m0c/.orca/agent-hooks/claude-hook.cmd || echo {}",
+            "timeout": 10
+          }
+        ]
+      }
+    ],
+    "SubagentStop": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "C:/Users/k1m0c/.orca/agent-hooks/claude-hook.cmd || echo {}",
+            "timeout": 10
+          }
+        ]
+      }
+    ],
+    "TeammateIdle": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "C:/Users/k1m0c/.orca/agent-hooks/claude-hook.cmd || echo {}",
+            "timeout": 10
+          }
+        ]
+      }
+    ],
+    "PreToolUse": [
+      {
+        "matcher": "*",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "C:/Users/k1m0c/.orca/agent-hooks/claude-hook.cmd || echo {}",
+            "timeout": 10
+          }
+        ]
+      }
+    ],
+    "PostToolUse": [
+      {
+        "matcher": "*",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "C:/Users/k1m0c/.orca/agent-hooks/claude-hook.cmd || echo {}",
+            "timeout": 10
+          }
+        ]
+      }
+    ],
+    "PostToolUseFailure": [
+      {
+        "matcher": "*",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "C:/Users/k1m0c/.orca/agent-hooks/claude-hook.cmd || echo {}",
+            "timeout": 10
+          }
+        ]
+      }
+    ],
+    "PermissionRequest": [
+      {
+        "matcher": "*",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "C:/Users/k1m0c/.orca/agent-hooks/claude-hook.cmd || echo {}",
+            "timeout": 10
+          }
+        ]
+      }
+    ],
+    "PostCompact": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "C:/Users/k1m0c/.orca/agent-hooks/claude-hook.cmd || echo {}",
+            "timeout": 10
+          }
+        ]
+      }
+    ]
+  },
+  "statusLine": {
+    "type": "command",
+    "command": "npx -y ccstatusline@latest",
+    "padding": 0
+  },
+  "enabledPlugins": {
+    "custom-statusline@FlineDev": true,
+    "ponytail@ponytail": true,
+    "diagram-design@diagram-design": true
+  },
+  "extraKnownMarketplaces": {
+    "FlineDev": {
+      "source": {
+        "source": "github",
+        "repo": "FlineDev/Marketplace"
+      }
+    },
+    "ponytail": {
+      "source": {
+        "source": "github",
+        "repo": "DietrichGebert/ponytail"
+      }
+    },
+    "diagram-design": {
+      "source": {
+        "source": "github",
+        "repo": "cathrynlavery/diagram-design"
+      }
+    }
+  },
+  "skipDangerousModePermissionPrompt": true,
+  "theme": "dark-ansi",
+  "mcpServers": {
+    "qdrant": {
+      "command": "uvx",
+      "args": [
+        "mcp-server-qdrant"
+      ],
+      "env": {
+        "QDRANT_URL": "http://192.168.0.212:6333",
+        "COLLECTION_NAME": "default"
+      }
+    },
+    "playwright-extension": {
+      "command": "npx",
+      "args": [
+        "@playwright/mcp@latest",
+        "--extension"
+      ],
+      "env": {
+        "PLAYWRIGHT_MCP_EXTENSION_TOKEN": "${SECRET:PLAYWRIGHT_MCP_EXTENSION_TOKEN}"
+      }
+    },
+    "gitnexus": {
+      "type": "sse",
+      "url": "https://gitnexus.chronicle.rip/sse",
+      "headers": {
+        "X-Api-Key": "${SECRET:X-Api-Key}"
+      }
+    },
+    "mem0": {
+      "command": "uvx",
+      "args": [
+        "--from",
+        "C:\\Users\\k1m0c\\mem0-mcp-server",
+        "mem0-mcp-server"
+      ],
+      "env": {
+        "MEM0_API_URL": "http://194.233.71.12:8001",
+        "MEM0_USERNAME": "k1m0ch1",
+        "MEM0_PASSWORD": "${SECRET:MEM0_PASSWORD}"
+      }
+    }
+  },
+  "hasCompletedOnboarding": true
+}

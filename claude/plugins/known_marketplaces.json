@@ -1,0 +1,34 @@
+{
+  "claude-plugins-official": {
+    "source": {
+      "source": "github",
+      "repo": "anthropics/claude-plugins-official"
+    },
+    "installLocation": "C:\\Users\\k1m0c\\.claude\\plugins\\marketplaces\\claude-plugins-official",
+    "lastUpdated": "2026-09-23T09:56:55.405Z"
+  },
+  "FlineDev": {
+    "source": {
+      "source": "github",
+      "repo": "FlineDev/Marketplace"
+    },
+    "installLocation": "C:\\Users\\k1m0c\\.claude\\plugins\\marketplaces\\FlineDev",
+    "lastUpdated": "2026-03-05T04:23:40.340Z"
+  },
+  "ponytail": {
+    "source": {
+      "source": "github",
+      "repo": "DietrichGebert/ponytail"
+    },
+    "installLocation": "C:\\Users\\k1m0c\\.claude\\plugins\\marketplaces\\ponytail",
+    "lastUpdated": "2026-06-23T09:12:35.223Z"
+  },
+  "diagram-design": {
+    "source": {
+      "source": "github",
+      "repo": "cathrynlavery/diagram-design"
+    },
+    "installLocation": "C:\\Users\\k1m0c\\.claude\\plugins\\marketplaces\\diagram-design",
+    "lastUpdated": "2026-08-13T05:28:08.740Z"
+  }
+}
