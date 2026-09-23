@@ -26,6 +26,15 @@ backup() {
     fi
 }
 
+# Fetch the secrets BEFORE backing anything up, and force the clone over HTTPS.
+# The backup step below moves ~/.ssh out of the way, so an SSH clone here would
+# destroy the very credentials it needs (and on a fresh device they may not exist
+# yet). gh supplies its own token for the HTTPS clone, so this works either way.
+TMP_SECRETS="$(mktemp -d)"
+trap 'rm -rf "$TMP_SECRETS"' EXIT
+gh repo clone "$SECRETS_REPO" "$TMP_SECRETS" -- -q \
+    --config url."https://github.com/".insteadOf="git@github.com:"
+
 backup "$HOME/.claude"
 backup "$HOME/.ccs"
 backup "$HOME/.ssh"
@@ -33,10 +42,6 @@ backup "$HOME/.ssh"
 mkdir -p "$HOME/.claude" "$HOME/.ccs"
 cp -a "$SCRIPT_DIR/claude/." "$HOME/.claude/"
 cp -a "$SCRIPT_DIR/ccs/." "$HOME/.ccs/"
-
-TMP_SECRETS="$(mktemp -d)"
-trap 'rm -rf "$TMP_SECRETS"' EXIT
-gh repo clone "$SECRETS_REPO" "$TMP_SECRETS" -- -q
 
 # whole-file secrets, overwriting the sanitized public copies where they overlap
 cp -a "$TMP_SECRETS/claude/.credentials.json" "$HOME/.claude/.credentials.json" 2>/dev/null || true
