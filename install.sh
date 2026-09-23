@@ -77,3 +77,5 @@ find "$HOME/.claude/.credentials.json" "$HOME/.ccs/.session-secret" "$HOME/.ccs/
     -type f -exec chmod 600 {} + 2>/dev/null || true
 
 echo "done. Backups (if any) are at ~/.claude.bak.$TS and ~/.ccs.bak.$TS"
+
+bash "$SCRIPT_DIR/scripts/check-mcp.sh" "$HOME/.claude/settings.json" || true
